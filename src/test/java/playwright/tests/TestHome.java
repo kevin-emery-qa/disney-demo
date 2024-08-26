@@ -7,6 +7,10 @@ import com.microsoft.playwright.Playwright;
 import org.junit.jupiter.api.*;
 import playwright.pages.DisneyPlusHomePage;
 
+import java.text.DecimalFormat;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class TestHome {
     static Playwright playwright;
     static Browser browser;
@@ -37,7 +41,13 @@ public class TestHome {
     }
 
     @Test
-    public void testHomePage() {
+    public void testHomePageLoadTime() {
+        final float MAX_LOAD_TIME = 10; //seconds
+
         page.navigate(homePage.getBaseUrl());
+        float loadTime = ((float) homePage.measurePageLoad() / 1000);
+        String loadTimeStr = String.format("%.2f", loadTime);
+        Assertions.assertFalse(loadTime > MAX_LOAD_TIME, "Home page at " + homePage.getBaseUrl()
+                + " took more than " + String.valueOf(MAX_LOAD_TIME) + " seconds to load (" + loadTimeStr + "s)");
     }
 }
