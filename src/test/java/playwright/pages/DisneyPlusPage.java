@@ -17,8 +17,6 @@ public class DisneyPlusPage {
     private Page page;
     private final Page.WaitForSelectorOptions isVisible;
 
-    //props.load(this.class.getClassLoader().getResourceAsStream("project.properties"));
-
     public DisneyPlusPage(Page page) {
         this.page = page;
         try (FileReader reader = new FileReader("playwright.properties")){
@@ -44,7 +42,7 @@ public class DisneyPlusPage {
     private void scrollIntoViewJs(String elementLocator) {
         String evalString = "const element = document.querySelector(\"" + elementLocator + "\");" +
                 "if (element) {" +
-                "element.scrollIntoView({ behavior: \"smooth\", block: \"end\", inline: \"nearest\" });" +
+                "element.scrollIntoView({ behavior: \"smooth\", block: \"start\", inline: \"nearest\" });" +
                 "}";
         page.evaluate(evalString);
         assertTrue(true);
