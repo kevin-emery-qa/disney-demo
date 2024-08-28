@@ -1,13 +1,17 @@
-package playwright.tests;
+package disney.playwright.tests;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.LoadState;
+import disney.playwright.util.EmailHelper;
 import org.junit.jupiter.api.*;
-import playwright.pages.DisneyPlusHomePage;
+import disney.playwright.pages.DisneyPlusHomePage;
 
+import javax.mail.MessagingException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestHome {
@@ -54,5 +58,20 @@ public class TestHome {
         page.navigate(homePage.getBaseUrl());
         page.waitForLoadState(LoadState.NETWORKIDLE);
         homePage.scrollAndVerifyElements();
+    }
+
+    @Test
+    public void testRegistration() {
+        page.navigate(homePage.getBaseUrl());
+        page.waitForLoadState(LoadState.NETWORKIDLE);
+        EmailHelper emailHelper = new EmailHelper();
+        try {
+            assertTrue(emailHelper.isEmailSubjectPresent("someSubject123"));
+            // emailHelper.deleteEmail();
+            assertEquals(1, emailHelper.getEmailCount());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        page.pause();
     }
 }
