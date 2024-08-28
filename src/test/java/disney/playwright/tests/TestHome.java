@@ -5,14 +5,9 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.LoadState;
-import disney.playwright.util.EmailHelper;
 import org.junit.jupiter.api.*;
 import disney.playwright.pages.DisneyPlusHomePage;
 
-import javax.mail.MessagingException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestHome {
     static Playwright playwright;

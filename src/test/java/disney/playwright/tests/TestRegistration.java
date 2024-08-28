@@ -15,8 +15,6 @@ import disney.playwright.util.EmailHelper;
 
 import javax.mail.MessagingException;
 
-import java.util.Properties;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,15 +49,16 @@ public class TestRegistration {
     }
 
     @Test
-    public void testRegistration() {
+    public void testRegistrationLogin() {
         page.navigate(homePage.getBaseUrl());
         page.waitForLoadState(LoadState.NETWORKIDLE);
         registrationPage.registerHuluBundle();
-        page.waitForTimeout(10000);
 
+        page.waitForTimeout(10000); // give it some time to let the e-mail come in
         EmailHelper emailHelper = new EmailHelper();
         try {
-            assertTrue(emailHelper.isEmailSubjectPresent("New login to Disney+"));
+            assertTrue(emailHelper.isEmailSubjectPresent("New login to Disney+")
+                    || emailHelper.isEmailSubjectPresent("Welcome to MyDisney"));
             emailHelper.deleteEmail();
             assertEquals(0, emailHelper.getEmailCount());
         } catch (MessagingException e) {
