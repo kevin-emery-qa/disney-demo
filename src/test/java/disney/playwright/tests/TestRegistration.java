@@ -1,25 +1,32 @@
 package disney.playwright.tests;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.LoadState;
-import disney.playwright.util.EmailHelper;
-import org.junit.jupiter.api.*;
 import disney.playwright.pages.DisneyPlusHomePage;
+import disney.playwright.pages.DisneyPlusRegistrationPage;
+import disney.playwright.util.EmailHelper;
 
 import javax.mail.MessagingException;
+
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestHome {
+public class TestRegistration {
     static Playwright playwright;
     static Browser browser;
     BrowserContext context;
     Page page;
     DisneyPlusHomePage homePage;
+    DisneyPlusRegistrationPage registrationPage;
 
 
     @BeforeAll
@@ -33,6 +40,7 @@ public class TestHome {
         context = browser.newContext();
         page = context.newPage();
         homePage = new DisneyPlusHomePage(page);
+        registrationPage = new DisneyPlusRegistrationPage(page, homePage);
     }
 
     @AfterEach
@@ -43,20 +51,19 @@ public class TestHome {
     }
 
     @Test
-    public void testHomePageLoad() {
-        final float MAX_LOAD_TIME = 10; //seconds
-
-        page.navigate(homePage.getBaseUrl());
-        float loadTime = ((float) homePage.measurePageLoad() / 1000);
-        String loadTimeStr = String.format("%.2f", loadTime);
-        Assertions.assertFalse(loadTime > MAX_LOAD_TIME, "Home page at " + homePage.getBaseUrl()
-                + " took more than " + String.valueOf(MAX_LOAD_TIME) + " seconds to load (" + loadTimeStr + "s)");
-    }
-
-    @Test
-    public void testLazyLoading() {
+    public void testRegistration() {
         page.navigate(homePage.getBaseUrl());
         page.waitForLoadState(LoadState.NETWORKIDLE);
-        homePage.scrollAndVerifyElements();
+        registrationPage.registerHuluBundle();
+        page.waitForTimeout(10000);
+
+        EmailHelper emailHelper = new EmailHelper();
+        try {
+            assertTrue(emailHelper.isEmailSubjectPresent("New login to Disney+"));
+            emailHelper.deleteEmail();
+            assertEquals(0, emailHelper.getEmailCount());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

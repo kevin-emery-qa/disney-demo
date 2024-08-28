@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DisneyPlusPage {
     Properties properties = new java.util.Properties();
     String baseUrl;
-    private Page page;
+    private final Page page;
     private final Page.WaitForSelectorOptions isVisible;
 
     public DisneyPlusPage(Page page) {

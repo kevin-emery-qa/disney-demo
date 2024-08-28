@@ -15,11 +15,11 @@ public class DisneyPlusHomePage extends DisneyPlusPage {
 
     public static class Locators {
         public static String disneyLogo = "[alt*='Disney+ Logo']";
-        public static String center = ".md-align-center";
-        public static String centerBundle1 = center + " [data-testid='2p_bundle_cta'] span";
-        public static String centerBundle2 = center + " [data-testid='max_ads_bundle'] span";
-        public static String centerBundle1Terms = center + " li:has([data-testid='2p_bundle_cta']) [data-testid='mlp_link']";
-        public static String centerBundle2Terms = center + " li:has([data-testid='max_ads_bundle']) [data-testid='mlp_link']";
+        public static String center = ".sm-align-center";
+        public static String centerBundle1 = center + " [data-testid='2p_bundle_cta_hero'] span";
+        public static String centerBundle2 = center + " [data-testid='max_ads_bundle_hero'] span";
+        public static String hiddenBundle1Terms = center + " li:has([data-testid='2p_bundle_cta']) [data-testid='mlp_link']";
+        public static String hiddenBundle2Terms = center + " li:has([data-testid='max_ads_bundle']) [data-testid='mlp_link']";
         public static String planCompSection = "section#us-plan-comp";
         public static String planCompHeaderRow = planCompSection + " .header-row-body";
         public static String planSelect0 = ".feature-column-header + fieldset #select-0";
@@ -44,18 +44,22 @@ public class DisneyPlusHomePage extends DisneyPlusPage {
     }
 
     public long measurePageLoad() {
-        page.navigate(super.getBaseUrl());
         long startTime = System.nanoTime();
+        page.navigate(super.getBaseUrl());
         page.waitForLoadState(LoadState.NETWORKIDLE);
         return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
     }
 
     public void scrollAndVerifyElements() {
-        // Expect these elements to be attached prior to lazy loading
-        page.waitForSelector(Locators.centerBundle1, isAttached);
-        page.waitForSelector(Locators.centerBundle1Terms, isAttached);
-        page.waitForSelector(Locators.centerBundle2, isAttached);
-        page.waitForSelector(Locators.centerBundle2Terms, isAttached);
+        // Expect hero bundle buttons to be visible when the page opens
+        page.waitForSelector(Locators.centerBundle1, isVisible);
+        page.waitForSelector(Locators.centerBundle2, isVisible);
+
+        // Expect these elements to be attached but not visible prior to lazy loading
+        page.waitForSelector(Locators.centerBundle1, isVisible);
+        page.waitForSelector(Locators.hiddenBundle1Terms, isAttached);
+        page.waitForSelector(Locators.centerBundle2, isVisible);
+        page.waitForSelector(Locators.hiddenBundle2Terms, isAttached);
         page.waitForSelector(Locators.planCompHeaderRow, isAttached);
 
         // Expect specific text to be present in the plan headers
