@@ -56,9 +56,7 @@ public class DisneyPlusHomePage extends DisneyPlusPage {
         page.waitForSelector(Locators.centerBundle2, isVisible);
 
         // Expect these elements to be attached but not visible prior to lazy loading
-        page.waitForSelector(Locators.centerBundle1, isVisible);
         page.waitForSelector(Locators.hiddenBundle1Terms, isAttached);
-        page.waitForSelector(Locators.centerBundle2, isVisible);
         page.waitForSelector(Locators.hiddenBundle2Terms, isAttached);
         page.waitForSelector(Locators.planCompHeaderRow, isAttached);
 
