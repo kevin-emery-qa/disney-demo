@@ -47,10 +47,10 @@ public class DisneyPlusRegistrationPage extends DisneyPlusPage {
         this.homePage = homePage;
         isVisible = new Page.WaitForSelectorOptions()
                 .setState(WaitForSelectorState.VISIBLE)
-                .setTimeout(10000);
+                .setTimeout(20000);
         isAttached = new Page.WaitForSelectorOptions()
                 .setState(WaitForSelectorState.ATTACHED)
-                .setTimeout(10000);
+                .setTimeout(20000);
 
         try {
             FileReader reader = new FileReader("playwright.properties");

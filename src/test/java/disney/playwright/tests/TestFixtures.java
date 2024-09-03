@@ -8,6 +8,8 @@ import disney.playwright.pages.DisneyPlusHomePage;
 import disney.playwright.pages.DisneyPlusRegistrationPage;
 import org.junit.jupiter.api.*;
 
+import java.nio.file.Paths;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestFixtures {
     Playwright playwright;
@@ -31,7 +33,9 @@ public class TestFixtures {
 
     @BeforeEach
     void beforeEach() {
-        context = browser.newContext();
+        context = browser.newContext(new Browser.NewContextOptions()
+                .setRecordVideoDir(Paths.get("videos/"))
+                .setRecordVideoSize(640,480));
         page = context.newPage();
         homePage = new DisneyPlusHomePage(page);
         registrationPage = new DisneyPlusRegistrationPage(page, homePage);
